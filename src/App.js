@@ -1,23 +1,65 @@
 import './App.css';
-import { Form, Button } from 'react-bootstrap'
 
 function App() {
-    return (
-        <div className='container my-5 bg-white p-5 rounded-3 shadow' style={{maxWidth: '600px'}}>
-            <Form>
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Your name</Form.Label>
-                    <Form.Control type="text" placeholder="Enter name" />
-                </Form.Group>
+    const handleUserData = (e) => {
+        e.preventDefault();
+        const name = e.target.name.value;
+        const email = e.target.email.value;
 
-                <Form.Group className="mb-3" controlId="formBasicEmail">
-                    <Form.Label>Email address</Form.Label>
-                    <Form.Control type="email" placeholder="Enter email" />
-                </Form.Group>
-                <Button variant="primary" type="submit">
-                    Add User
-                </Button>
-            </Form>
+        // create user object
+        const user = { name, email };
+
+        // post data to the server
+        fetch('http://localhost:5000/user', {
+            method: 'POST',
+            headers: {
+                'content-type': 'application/json',
+            },
+            body: JSON.stringify(user),
+        })
+            .then((res) => res.json())
+            .then((data) => {
+              console.log(data)
+              e.target.reset()
+            });
+    };
+
+    return (
+        <div
+            className="container my-5 bg-white py-4 px-5 rounded-3 shadow"
+            style={{ maxWidth: '600px' }}
+        >
+            <form onSubmit={handleUserData}>
+                <div className="mb-3">
+                    <label htmlFor="name" className="form-label">
+                        Your name
+                    </label>
+                    <input
+                        type="text"
+                        className="form-control"
+                        name="name"
+                        placeholder="Enter name"
+                        id="name"
+                    />
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="email" className="form-label">
+                        Email address
+                    </label>
+                    <input
+                        type="email"
+                        className="form-control"
+                        name="email"
+                        placeholder="Enter email"
+                        id="email"
+                    />
+                </div>
+                <input
+                    className="btn btn-primary"
+                    type="submit"
+                    value="Add Data"
+                />
+            </form>
         </div>
     );
 }
